@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- CLAUDIO -->
+    <string name="app_name">SMN</string>
+    <string name="main_ciudad">Ciudad</string>
+    <string name="main_grados">°</string>
+    <string name="main_pipe">|</string>
+    <string name="main_porcentaje">%</string>
+    <string name="main_km_h">km/h</string>
+
+    <string name="main_temperatura">27.5°</string>
+    <string name="main_sensacion_termica">ST: 35.5°</string>
+    <string name="main_st">ST:</string>
+    <string name="main_max_min">29°|37°</string>
+    <string name="main_humedad">82%</string>
+    <string name="main_velocidad_viento">8 km/h</string>
+    <string name="main_direccion_viento">Sur/Este</string>
+    <string name="main_dia_actual">Martes 16/05</string>
+
+
+    <string name="p1_c1_temperatura">34°</string>
+    <string name="p1_c2_temperatura">14°</string>
+    <string name="p1_c1_sensacion_termica">ST: 35.5°</string>
+    <string name="p1_c2_sensacion_termica">ST: 15°</string>
+    <string name="p1_c1_max_min">29°|37°</string>
+    <string name="p1_c2_max_min">03°|18°</string>
+    <string name="p1_humedad">82%</string>
+    <string name="p1_velocidad_viento">8 km/h</string>
+    <string name="p1_direccion_viento">Sur/Oeste</string>
+    <string name="p1_estado_tiempo">Estado del tiempo</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="p1_dia_1_scroller">Martes 16/05</string>
+    <string name="p1_dia_1_rango">09°|17°</string>
+    <string name="p1_dia_2_scroller">Miércoles 17/05</string>
+    <string name="p1_dia_2_rango">09°|17°</string>
+    <string name="p1_dia_3_scroller">Jueves 18/05</string>
+    <string name="p1_dia_3_rango">09°|17°</string>
+    <string name="mañana">Mañana</string>
+    <string name="p1_estado_tiempo_mañana">Estado del tiempo en la mañana</string>
+    <string name="tarde">Tarde/Noche</string>
+    <string name="p1_estado_tiempo_tarde">Estado del tiempo en la tarde</string>
+    <string name="noche">Noche</string>
+    <string name="p1_estado_tiempo_noche">Estado del tiempo en la noche</string>
+    <string name="p1_minima">Temperatura mínima</string>
+    <string name="p1_maxima">Temperatura máxima</string>
+    <string name="p1_icono_sensacion_termica">Sensación térmica</string>
+    <string name="p1_ciudad1">Buenos Aires</string>
+    <string name="p1_ciudad2">Santa Fe</string>
+    <string name="p1_tiempo_dia_1">Martes 16</string>
+    <string name="p1_tiempo_dia_1_minima">09°</string>
+    <string name="p1_tiempo_dia_1_maxima">17°</string>
+    <string name="p1_tiempo_dia_2">Miércoles 17</string>
+    <string name="p1_tiempo_dia_2_minima">10°</string>
+    <string name="p1_tiempo_dia_2_maxima">19°</string>
+    <string name="p1_tiempo_dia_3">Jueves 18</string>
+    <string name="p1_tiempo_dia_3_minima">08°</string>
+    <string name="p1_tiempo_dia_3_maxima">15°</string>
+    <string name="p1_tiempo_dia_4">Viernes 19</string>
+    <string name="p1_tiempo_dia_4_minima">09°</string>
+    <string name="p1_tiempo_dia_4_maxima">19°</string>
+    <string name="p1_tiempo_dia_5">Sábado 20</string>
+    <string name="p1_tiempo_dia_5_minima">11°</string>
+    <string name="p1_tiempo_dia_5_maxima">17°</string>
+    <string name="p1_tiempo_dia_6">Domingo 21</string>
+    <string name="p1_tiempo_dia_6_minima">07°</string>
+    <string name="p1_tiempo_dia_6_maxima">12°</string>
+    <string name="p1_tiempo_dia_7">Lunes 22</string>
+    <string name="p1_tiempo_dia_7_minima">05°</string>
+    <string name="p1_tiempo_dia_7_maxima">13°</string>
+    <string name="action_example">Example action</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_pronostico_dias">PronosticoDiasActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_pronostico_dias">Pronóstico extendido</string>
+    <string name="label_pronostico_dias">Pronóstico extendido: 7 días</string>
+
+
+    <!-- MIGUEL -->
+    <string name="title_activity_ajustes">Ajustes</string>
+    <string name="ajustes_titulo_1">Mis ciudades +</string>
+    <string name="ajustes_elegir_ciudad">Agregar una ciudad</string>
+    <string name="ajustes_quitar_ciudad">X</string>
+
+    <string name="ajustes_titulo_2">Ajustes +</string>
+    <string name="ajustes_unidades">Unidades °F</string>
+    <string name="ajustes_notificaciones">Notificaciones</string>
+
+    <string name="ajustes_mensaje_ok">Los nuevos ajustes fueron guardados exitosamente.</string>
+
+    <string name="title_section1">Ajustes</string>
+    <string name="title_section2">Alertas</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_graph">GraphActivity</string>
+    <string name="NS">http://schemas.android.com/apk/res/com.example.smn.smn</string>
+    <string name="title_activity_alertas">Alertas</string>
+    <string name="title_section3">Section 3</string>
+
+    <!-- BOGDAN -->
+
+
+</resources>
