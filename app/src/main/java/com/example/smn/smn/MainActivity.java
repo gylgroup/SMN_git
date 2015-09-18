@@ -3,6 +3,7 @@ package com.example.smn.smn;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,9 +41,7 @@ import org.json.JSONTokener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Set;
-import java.util.zip.Inflater;
 
 
 public class MainActivity extends ActionBarActivity
@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity
     private int screen_width;
     private int screen_height;
     private Activity activity = this;
+    private Iconos iconos;
+    private Integer posicion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +78,11 @@ public class MainActivity extends ActionBarActivity
 
         getDimensionesPantalla();
         ajustes = new Ajustes(this);
-        crearMainLayout();
+        GPSTracker gps = new GPSTracker(this);
+        Location location = gps.getLocation();
+        if(location != null) {
+            crearMainLayout(location);
+        }
 
     }
 
@@ -97,10 +103,12 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-    public void crearMainLayout(){
+    public void crearMainLayout(Location location){
+
 
         String uri = "http://200.16.116.28:9000/smn_mobile/obtener_pronostico";
         String json = "{\"co\":\"-65.95642852783203,-39.18587875366211\"";
+        //String json = "{\"co\":\""+location.getLongitude()+","+location.getLatitude()+"\"";
 
         //crearLayoutCiudad(null);
         //Recuperar ciudades.
@@ -169,7 +177,7 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            getMenuInflater().inflate(R.menu.menu_main, menu);
             restoreActionBar();
             return true;
         }
@@ -255,11 +263,13 @@ public class MainActivity extends ActionBarActivity
             return null;
         }
 
-        protected void crearLayoutCiudad(LayoutInflater inflater, LinearLayout linLayout, JSONObject ciudad_ll){
+        protected void crearLayoutCiudad(LayoutInflater inflater, LinearLayout linLayout, JSONObject ciudad_ll, Integer posicion_vista){
 
             try {
 
-                Iconos iconos = new Iconos();
+                iconos = new Iconos();
+                posicion = posicion_vista;
+
                 // Array de pronostico de esta y las proximas 11 horas
                 JSONArray ph = ciudad_ll.getJSONArray("ph");
                 JSONObject datos_ph = null;
@@ -346,41 +356,84 @@ public class MainActivity extends ActionBarActivity
                 TextView tvDireccionViento = (TextView) viewCiudadPronostico.findViewById(R.id.estado_tiempo_direccion_viento);
                 tvDireccionViento.setText(txtDireccionVientoActual);
 
-                // agregar la vista de ciudad al layout
-                linLayout.addView(viewCiudadPronostico);
-
                 // pronostico 4 d�as
-                LinearLayout scrollerLayout = (LinearLayout) findViewById(R.id.layout_scroller);
+                LinearLayout scrollerLayout = (LinearLayout) viewCiudadPronostico.findViewById(R.id.layout_scroller);
                 for (int i=0; i < pd.length(); i++) {
 
                     JSONObject dia_pd = pd.getJSONObject(i);
 
-                    View viewCiudadPronosticoDiario = inflater.inflate(R.layout.main_ciudad_pronostico_diario, null);
-                    LinearLayout llDiaActual = (LinearLayout) viewCiudadPronosticoDiario.findViewById(R.id.pronostico_dia_actual);
-                    ViewGroup.LayoutParams paramDiaActual = llDiaActual.getLayoutParams();
-                    paramDiaActual.width = screen_width;
-                    llDiaActual.setLayoutParams(paramDiaActual);
+                    // layout dia pronosticado
+                    LinearLayout linearDias = new LinearLayout(this.context);
+                    linearDias.setOrientation(LinearLayout.VERTICAL);
+                    linearDias.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearDias.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+                    ViewGroup.LayoutParams paramDias = linearDias.getLayoutParams();
+                    paramDias.width = screen_width;
+                    linearDias.setLayoutParams(paramDias);
 
-                    // dia pronosticado
+                    // nombre del dia pronosticado
+                    TextView tvDiaActualNombre = new TextView(this.context);
+                    tvDiaActualNombre.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    tvDiaActualNombre.setTextAppearance(this.context, R.style.ajustesNombreDiaPronosticado);
+
                     JSONObject fechaPronosticada = dia_pd.getJSONObject("fechaPronosticada");
                     SimpleDateFormat format = new SimpleDateFormat("EEEE d/MM");
-                    TextView tvDiaActualNombre = (TextView) viewCiudadPronosticoDiario.findViewById(R.id.pronostico_dia_actual_fecha);
                     Date fecha = new Date(Integer.parseInt(fechaPronosticada.getString("year")),
                             Integer.parseInt(fechaPronosticada.getString("monthValue"))-1,
                             Integer.parseInt(fechaPronosticada.getString("dayOfMonth")));
-
                     tvDiaActualNombre.setText(format.format(fecha));
+                    linearDias.addView(tvDiaActualNombre);
 
-                    scrollerLayout.addView(viewCiudadPronosticoDiario);
+                    // layout pronostico maniana tarde
+                    LinearLayout linearDiaManianaTarde = new LinearLayout(this.context);
+                    linearDiaManianaTarde.setOrientation(LinearLayout.HORIZONTAL);
+                    linearDiaManianaTarde.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+
+                    // layout pronostico maniana
+                    LinearLayout linearDiaManiana = new LinearLayout(this.context);
+                    linearDiaManiana.setOrientation(LinearLayout.VERTICAL);
+                    linearDiaManiana.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearDiaManiana.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            0.50f));
+
+
+                    linearDiaManianaTarde.addView(linearDiaManiana);
+
+                    // layout pronostico tarde-noche
+                    LinearLayout linearDiaTardeNoche = new LinearLayout(this.context);
+                    linearDiaTardeNoche.setOrientation(LinearLayout.VERTICAL);
+                    linearDiaTardeNoche.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearDiaTardeNoche.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            0.50f));
+
+
+                    linearDiaManianaTarde.addView(linearDiaTardeNoche);
+
+
+                    linearDias.addView(linearDiaManianaTarde);
+                    scrollerLayout.addView(linearDias);
 
                 }
 
 
                 HorizontalScrollView parentScroll= (HorizontalScrollView) findViewById(R.id.scroller_horizontal);
-                HorizontalScrollView childScroll= (HorizontalScrollView) findViewById(R.id.scroll_dias_pronostico);
+                HorizontalScrollView childScroll= (HorizontalScrollView) viewCiudadPronostico.findViewById(R.id.scroll_dias_pronostico);
+                childScroll.setId(iconos.getNuevoScrollerIdPorPosicion(posicion));
                 parentScroll.setOnTouchListener(new View.OnTouchListener() {
                     public boolean onTouch(View v, MotionEvent event) {
-                        findViewById(R.id.scroll_dias_pronostico).getParent().requestDisallowInterceptTouchEvent(false);
+                        //findViewById(R.id.scroll_dias_pronostico).getParent().requestDisallowInterceptTouchEvent(false);
+                        findViewById(iconos.getNuevoScrollerIdPorPosicion(posicion)).getParent().requestDisallowInterceptTouchEvent(false);
                         return false;
                     }
                 });
@@ -391,6 +444,10 @@ public class MainActivity extends ActionBarActivity
                         return false;
                     }
                 });
+
+                // agregar la vista de ciudad al layout
+                linLayout.addView(viewCiudadPronostico);
+
 
 
 
@@ -413,13 +470,13 @@ public class MainActivity extends ActionBarActivity
 
                 JSONObject pua = object.getJSONObject("pua");
                 //Toast.makeText(getApplicationContext(), pua.getString("pd"), Toast.LENGTH_LONG).show();
-                this.crearLayoutCiudad(inflater, linLayout, pua);
+                this.crearLayoutCiudad(inflater, linLayout, pua, 0);
 
                 JSONArray ll = object.getJSONArray("ll");
-                for (int i=0; i < ll.length(); i++) {
+                for (int i=1; i <= ll.length(); i++) {
 
-                    JSONObject ciudad_ll = ll.getJSONObject(i);
-                    this.crearLayoutCiudad(inflater, linLayout, ciudad_ll);
+                    JSONObject ciudad_ll = ll.getJSONObject(i-1);
+                    this.crearLayoutCiudad(inflater, linLayout, ciudad_ll, i);
                 }
 
 

@@ -97,4 +97,31 @@ public class Iconos {
 
     }
 
+    public Integer getNuevoScrollerIdPorPosicion(int i){
+
+        Integer resourse = null;
+        switch (i) {
+
+            case 0:
+                resourse = R.id.scroll_dia_0;
+                break;
+            case 1:
+                resourse = R.id.scroll_dia_1;
+                break;
+            case 2:
+                resourse = R.id.scroll_dia_2;
+                break;
+            case 3:
+                resourse = R.id.scroll_dia_3;
+                break;
+            case 4:
+                resourse = R.id.scroll_dia_4;
+                break;
+            default:
+                resourse = R.id.scroll_dia_5;
+                break;
+        }
+        return resourse;
+    }
+
 }

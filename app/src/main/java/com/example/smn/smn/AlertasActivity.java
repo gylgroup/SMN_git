@@ -1,6 +1,7 @@
 package com.example.smn.smn;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class AlertasActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alertas);
 
-        //Llenar la lista de ciudades favoritas con las ciudades guardadas en los ajustes
+        //Llenar la lista de ciudades favoritas con las ciudades guardadas en los menu_ajustes
         AsyncTask jsonTask = new Json().execute();
     }
 
@@ -114,11 +115,19 @@ public class AlertasActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, AjustesActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_alertas:
+                Intent intent2 = new Intent(this, MainActivity.class);
+                startActivity(intent2);
+                break;
         }
 
         return super.onOptionsItemSelected(item);

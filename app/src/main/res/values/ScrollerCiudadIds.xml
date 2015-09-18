@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="scroll_dia_0" type="id"/>
+    <item name="scroll_dia_1" type="id"/>
+    <item name="scroll_dia_2" type="id"/>
+    <item name="scroll_dia_3" type="id"/>
+    <item name="scroll_dia_4" type="id"/>
+    <item name="scroll_dia_5" type="id"/>
+</resources>

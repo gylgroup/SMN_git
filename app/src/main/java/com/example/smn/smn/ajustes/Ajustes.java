@@ -101,7 +101,7 @@ public class Ajustes {
             }
         }
         if(!no_encontrado){
-            // Agregar el id de la nueva ciudad a los ajustes
+            // Agregar el id de la nueva ciudad a los menu_ajustes
             String nueva_ciudad = ""+nuevo_id+"";
             ciudades.add(nueva_ciudad);
             setCiudades(ciudades, true);

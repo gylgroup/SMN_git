@@ -190,13 +190,12 @@
             <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
                 android:id="@+id/scroll_dias_pronostico"
                 android:background="#ff2b2b2b">
 
                 <LinearLayout
                     android:orientation="horizontal"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
                     android:id="@+id/layout_scroller">
 

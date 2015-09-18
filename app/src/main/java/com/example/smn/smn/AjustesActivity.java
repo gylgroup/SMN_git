@@ -26,7 +26,6 @@ import com.example.smn.smn.ajustes.ItemAutoTextAdapter;
 import com.example.smn.smn.db.DbAdapter;
 
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 
 
@@ -111,7 +110,7 @@ public class AjustesActivity extends ActionBarActivity
 
                 @Override
                 public void onClick(View view) {
-                    // Quitar la ciudad de los ajustes
+                    // Quitar la ciudad de los menu_ajustes
                     ajustes.quitarCiudad(view.getTag().toString());
 
                     // Refrescar la lista de ciudades
@@ -145,12 +144,12 @@ public class AjustesActivity extends ActionBarActivity
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 
-                // Agregar la nueva ciudad a los ajustes
+                // Agregar la nueva ciudad a los menu_ajustes
                 //String nueva_ciudad = Objects.toString(arg3);
                 String nueva_ciudad = ""+arg3+"";
                 boolean agregada = ajustes.agregarCiudad(nueva_ciudad);
 
-                // Si fue guardada en los ajustes, agregar el item en la lista de favoritas
+                // Si fue guardada en los menu_ajustes, agregar el item en la lista de favoritas
                 if(agregada){
                     int cantCiudades = ajustes.getCiudades().size();
                     agregarItemAListaCiudades(parentActivity, nueva_ciudad, cantCiudades);
@@ -165,7 +164,7 @@ public class AjustesActivity extends ActionBarActivity
     }
 
     /*
-    * Llenar la lista de ciudades favoritas con las ciudades guardadas en los ajustes
+    * Llenar la lista de ciudades favoritas con las ciudades guardadas en los menu_ajustes
     *
     * @param activity
     */
@@ -186,7 +185,7 @@ public class AjustesActivity extends ActionBarActivity
     }
 
     /**
-     * Genera el comportamiento para colapsar/expandir los grupos de ajustes
+     * Genera el comportamiento para colapsar/expandir los grupos de menu_ajustes
      */
     private void initAjustesColapsable(){
 
@@ -217,7 +216,7 @@ public class AjustesActivity extends ActionBarActivity
     }
 
     /**
-     * Inicializa los elementos del menu de ajustes de acuerdo a las preferencias guardadas     *
+     * Inicializa los elementos del menu de menu_ajustes de acuerdo a las preferencias guardadas     *
      */
     private void cargaAjustes(){
 
@@ -252,7 +251,7 @@ public class AjustesActivity extends ActionBarActivity
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
+        // update the menu_main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
 
@@ -301,7 +300,7 @@ public class AjustesActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            getMenuInflater().inflate(R.menu.menu_ajustes, menu);
             restoreActionBar();
             return true;
         }
@@ -318,7 +317,7 @@ public class AjustesActivity extends ActionBarActivity
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.action_settings:
-                Intent intent = new Intent(this, AjustesActivity.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 break;
             case R.id.action_alertas:
