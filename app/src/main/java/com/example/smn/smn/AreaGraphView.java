@@ -58,7 +58,7 @@ public class AreaGraphView extends GraphView {
     public AreaGraphView(Context context, AttributeSet attributes) {
         super(context, attributes);
         mLinePaint.setColor(attributes.getAttributeIntValue(customSchemaLocation, "graph_line_colour", 0xFF007ba1));
-        mLinePaint.setStrokeWidth(attributes.getAttributeFloatValue(customSchemaLocation, "graph_line_width", 3.0f));
+        mLinePaint.setStrokeWidth(attributes.getAttributeFloatValue(customSchemaLocation, "graph_line_width", 5.0f));
         mLinePaint.setAntiAlias(attributes.getAttributeBooleanValue(customSchemaLocation, "graph_line_anti_alias", true));
         mLinePaint.setStyle(Paint.Style.STROKE);
 

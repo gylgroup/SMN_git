@@ -2,6 +2,7 @@ package com.example.smn.smn;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -62,6 +63,7 @@ public class MainActivity extends ActionBarActivity
     private Activity activity = this;
     private Iconos iconos;
     private Integer posicion;
+    private GraphView mGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,7 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
 
         getDimensionesPantalla();
         ajustes = new Ajustes(this);
@@ -107,8 +110,8 @@ public class MainActivity extends ActionBarActivity
 
 
         String uri = "http://200.16.116.28:9000/smn_mobile/obtener_pronostico";
-        String json = "{\"co\":\"-65.95642852783203,-39.18587875366211\"";
-        //String json = "{\"co\":\""+location.getLongitude()+","+location.getLatitude()+"\"";
+        //String json = "{\"co\":\"-65.95642852783203,-39.18587875366211\"";
+        String json = "{\"co\":\""+location.getLongitude()+","+location.getLatitude()+"\"";
 
         //crearLayoutCiudad(null);
         //Recuperar ciudades.
@@ -127,7 +130,7 @@ public class MainActivity extends ActionBarActivity
         }
         json += "}";
 
-        Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), json, Toast.LENGTH_LONG).show();
         AsyncTask jsonTask = new Json().execute(uri, json, "POST");
 
     }
@@ -366,6 +369,7 @@ public class MainActivity extends ActionBarActivity
                     LinearLayout linearDias = new LinearLayout(this.context);
                     linearDias.setOrientation(LinearLayout.VERTICAL);
                     linearDias.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearDias.setPadding(0,20, 0, 10);
                     linearDias.setLayoutParams(new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.MATCH_PARENT));
@@ -375,6 +379,7 @@ public class MainActivity extends ActionBarActivity
 
                     // nombre del dia pronosticado
                     TextView tvDiaActualNombre = new TextView(this.context);
+                    tvDiaActualNombre.setGravity(Gravity.CENTER_HORIZONTAL);
                     tvDiaActualNombre.setLayoutParams(new android.app.ActionBar.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -396,35 +401,368 @@ public class MainActivity extends ActionBarActivity
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.MATCH_PARENT));
 
-                    // layout pronostico maniana
+
+                    // LAYOUT PRONOSOTICO MANANA
                     LinearLayout linearDiaManiana = new LinearLayout(this.context);
                     linearDiaManiana.setOrientation(LinearLayout.VERTICAL);
                     linearDiaManiana.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearDiaManiana.setPadding(0, 20, 0, 0);
                     linearDiaManiana.setLayoutParams(new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             0.50f));
 
+                    // texto Mañana
+                    TextView tvTextoManiana = new TextView(this.context);
+                    tvTextoManiana.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvTextoManiana.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    tvTextoManiana.setText(R.string.maniana);
+                    tvTextoManiana.setTextAppearance(this.context, R.style.ajustesTextoManianaTarde);
+                    linearDiaManiana.addView(tvTextoManiana);
 
+                    // icono pronostico maniana
+                    JSONObject objetoManiana = dia_pd.getJSONObject("m");
+                    ImageView ivEstadoManiana = new ImageView(this.context);
+                    ivEstadoManiana.setPadding(0,20,0,0);
+                    ivEstadoManiana.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivEstadoManiana.setBackgroundResource(iconos.getDrawableById(objetoManiana.getString("i")));
+                    ViewGroup.LayoutParams ivParamsManiana = ivEstadoManiana.getLayoutParams();
+                    ivParamsManiana.width = 180;
+                    ivParamsManiana.height = 180;
+                    linearDiaManiana.addView(ivEstadoManiana);
+
+                    // layout pronostico temperatura min/max
+                    LinearLayout linearDiaManianaMaxMin = new LinearLayout(this.context);
+                    linearDiaManianaMaxMin.setOrientation(LinearLayout.HORIZONTAL);
+                    linearDiaManianaMaxMin.setPadding(10, 0, 10, 10);
+                    linearDiaManianaMaxMin.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+
+                    // icono min
+                    ImageView ivManianaMin = new ImageView(this.context);
+                    ivManianaMin.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivManianaMin.setBackgroundResource(R.drawable.min);
+                    ivManianaMin.setPadding(3, 10, 3, 10);
+                    ViewGroup.LayoutParams ivParamsManianaMin = ivManianaMin.getLayoutParams();
+                    ivParamsManianaMin.width = 10;
+                    ivParamsManianaMin.height = 10;
+                    linearDiaManianaMaxMin.addView(ivManianaMin);
+
+                    // texto rango temperatura
+                    TextView tvTextoManianaMaxMin = new TextView(this.context);
+                    tvTextoManianaMaxMin.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvTextoManianaMaxMin.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    String objetoTemperaturaMinMax = dia_pd.getString("ti")+getString(R.string.main_grados)+
+                            getString(R.string.main_pipe)+dia_pd.getString("ta")+getString(R.string.main_grados);
+                    tvTextoManianaMaxMin.setText(objetoTemperaturaMinMax);
+                    tvTextoManianaMaxMin.setTextAppearance(this.context, R.style.ajustesTextoMaxMin);
+                    linearDiaManianaMaxMin.addView(tvTextoManianaMaxMin);
+
+                    // icono min
+                    ImageView ivManianaMax = new ImageView(this.context);
+                    ivManianaMax.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivManianaMax.setBackgroundResource(R.drawable.max);
+                    ivManianaMax.setPadding(3, 10, 3, 10);
+                    ViewGroup.LayoutParams ivParamsManianaMax = ivManianaMax.getLayoutParams();
+                    ivParamsManianaMax.width = 10;
+                    ivParamsManianaMax.height = 10;
+                    linearDiaManianaMaxMin.addView(ivManianaMax);
+
+                    linearDiaManiana.addView(linearDiaManianaMaxMin);
                     linearDiaManianaTarde.addView(linearDiaManiana);
 
-                    // layout pronostico tarde-noche
+
+
+
+                    // LAYOUT PRONOSTICO TARDE-NOCHE
                     LinearLayout linearDiaTardeNoche = new LinearLayout(this.context);
                     linearDiaTardeNoche.setOrientation(LinearLayout.VERTICAL);
                     linearDiaTardeNoche.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearDiaTardeNoche.setPadding(0, 20, 0, 0);
                     linearDiaTardeNoche.setLayoutParams(new LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.MATCH_PARENT,
                             0.50f));
 
+                    // texto Tarde/Noche
+                    TextView tvTextoTarde = new TextView(this.context);
+                    tvTextoTarde.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvTextoTarde.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    tvTextoTarde.setText(R.string.tarde_noche);
+                    tvTextoTarde.setTextAppearance(this.context, R.style.ajustesTextoManianaTarde);
+                    linearDiaTardeNoche.addView(tvTextoTarde);
 
+                    // icono pronostico tarde
+                    JSONObject objetoTarde = dia_pd.getJSONObject("a");
+                    ImageView ivEstadoTarde = new ImageView(this.context);
+                    ivEstadoTarde.setPadding(0,20,0,0);
+                    ivEstadoTarde.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivEstadoTarde.setBackgroundResource(iconos.getDrawableById(objetoTarde.getString("i")));
+                    ViewGroup.LayoutParams ivParamsTarde = ivEstadoTarde.getLayoutParams();
+                    ivParamsTarde.width = 180;
+                    ivParamsTarde.height = 180;
+                    linearDiaTardeNoche.addView(ivEstadoTarde);
+
+                    // layout pronostico temperatura min/max
+                    LinearLayout linearDiaTardeMaxMin = new LinearLayout(this.context);
+                    linearDiaTardeMaxMin.setOrientation(LinearLayout.HORIZONTAL);
+                    linearDiaTardeMaxMin.setPadding(10, 0, 10, 10);
+                    linearDiaTardeMaxMin.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+
+                    // icono min
+                    ImageView ivTardeMin = new ImageView(this.context);
+                    ivTardeMin.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivTardeMin.setBackgroundResource(R.drawable.min);
+                    ivTardeMin.setPadding(3, 10, 3, 10);
+                    ViewGroup.LayoutParams ivParamsTardeMin = ivTardeMin.getLayoutParams();
+                    ivParamsTardeMin.width = 10;
+                    ivParamsTardeMin.height = 10;
+                    linearDiaTardeMaxMin.addView(ivTardeMin);
+
+                    // texto rango temperatura
+                    TextView tvTextoTardeMaxMin = new TextView(this.context);
+                    tvTextoTardeMaxMin.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvTextoTardeMaxMin.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    String objetoTemperaturaMinMaxTarde = dia_pd.getString("ti")+getString(R.string.main_grados)+
+                            getString(R.string.main_pipe)+dia_pd.getString("ta")+getString(R.string.main_grados);
+                    tvTextoTardeMaxMin.setText(objetoTemperaturaMinMaxTarde);
+                    tvTextoTardeMaxMin.setTextAppearance(this.context, R.style.ajustesTextoMaxMin);
+                    linearDiaTardeMaxMin.addView(tvTextoTardeMaxMin);
+
+                    // icono max
+                    ImageView ivTardeMax = new ImageView(this.context);
+                    ivTardeMax.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivTardeMax.setBackgroundResource(R.drawable.max);
+                    ivTardeMax.setPadding(3, 10, 3, 10);
+                    ViewGroup.LayoutParams ivParamsTardeMax = ivTardeMax.getLayoutParams();
+                    ivParamsTardeMax.width = 10;
+                    ivParamsTardeMax.height = 10;
+                    linearDiaTardeMaxMin.addView(ivTardeMax);
+
+                    linearDiaTardeNoche.addView(linearDiaTardeMaxMin);
                     linearDiaManianaTarde.addView(linearDiaTardeNoche);
 
-
                     linearDias.addView(linearDiaManianaTarde);
+
+
                     scrollerLayout.addView(linearDias);
 
                 }
+
+
+                // PRONOSTICO EXTENDIDO
+                LinearLayout layoutPronosticoExtendido = (LinearLayout) viewCiudadPronostico.findViewById(R.id.pronostico_extendido);
+
+                // division
+                View division = new View(context);
+                division.setBackgroundColor(Color.parseColor("#ffafafaf"));
+                division.setLayoutParams(new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        2));
+                layoutPronosticoExtendido.addView(division);
+
+                for (int i=0; i < pd.length(); i++) {
+
+                    JSONObject dia_pd = pd.getJSONObject(i);
+
+                    LinearLayout linearExtendido = new LinearLayout(this.context);
+                    linearExtendido.setOrientation(LinearLayout.HORIZONTAL);
+                    linearExtendido.setPadding(10,10,10,10);
+                    if(i % 2 == 0) {
+                        linearExtendido.setBackgroundColor(Color.parseColor("#ff606060"));
+                    }else{
+                        linearExtendido.setBackgroundColor(Color.parseColor("#ff2b2b2b"));
+                    }
+                    linearExtendido.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+                    // nombre del dia pronosticado
+                    LinearLayout viewUnTercio = new LinearLayout(context);
+                    viewUnTercio.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f));
+
+                    TextView tvDiaNombre = new TextView(this.context);
+                    tvDiaNombre.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    tvDiaNombre.setTextAppearance(this.context, R.style.ajustesTextoPronosticoExtendido);
+
+                    JSONObject fechaPronosticada = dia_pd.getJSONObject("fechaPronosticada");
+                    SimpleDateFormat format = new SimpleDateFormat("EEEE d");
+                    Date fecha = new Date(Integer.parseInt(fechaPronosticada.getString("year")),
+                            Integer.parseInt(fechaPronosticada.getString("monthValue"))-1,
+                            Integer.parseInt(fechaPronosticada.getString("dayOfMonth")));
+                    tvDiaNombre.setText(format.format(fecha));
+                    viewUnTercio.addView(tvDiaNombre);
+                    linearExtendido.addView(viewUnTercio);
+
+
+                    // icono pronostico maniana
+                    LinearLayout viewDosTercios = new LinearLayout(context);
+                    viewDosTercios.setGravity(Gravity.RIGHT);
+                    viewDosTercios.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 0.2f));
+
+                    JSONObject objetoManiana = dia_pd.getJSONObject("m");
+                    ImageView ivEstadoManiana = new ImageView(this.context);
+                    ivEstadoManiana.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            Gravity.RIGHT));
+                    ivEstadoManiana.setBackgroundResource(iconos.getDrawableById(objetoManiana.getString("i")));
+                    ViewGroup.LayoutParams ivParamsManiana = ivEstadoManiana.getLayoutParams();
+                    ivParamsManiana.width = 50;
+                    ivParamsManiana.height = 50;
+                    viewDosTercios.addView(ivEstadoManiana);
+                    linearExtendido.addView(viewDosTercios);
+
+                    // linear temperaturas min/max
+                    LinearLayout linearExtendidoMinMax = new LinearLayout(this.context);
+                    linearExtendidoMinMax.setOrientation(LinearLayout.HORIZONTAL);
+                    linearExtendidoMinMax.setGravity(Gravity.RIGHT);
+                    linearExtendidoMinMax.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 0.3f));
+
+                    // icono min
+                    ImageView ivMin = new ImageView(this.context);
+                    ivMin.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            Gravity.LEFT));
+                    ivMin.setBackgroundResource(R.drawable.min);
+                    ivMin.setPadding(3, 10, 3, 10);
+                    ViewGroup.LayoutParams ivParamsMin = ivMin.getLayoutParams();
+                    ivParamsMin.width = 10;
+                    ivParamsMin.height = 10;
+                    linearExtendidoMinMax.addView(ivMin);
+
+                    // texto temperatura min
+                    TextView tvTextoMin = new TextView(this.context);
+                    tvTextoMin.setGravity(Gravity.CENTER_HORIZONTAL);
+                    tvTextoMin.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    tvTextoMin.setText(dia_pd.getString("ti")+getString(R.string.main_grados));
+                    tvTextoMin.setTextAppearance(this.context, R.style.ajustesTextoPronosticoExtendido);
+                    linearExtendidoMinMax.addView(tvTextoMin);
+
+
+                    // icono max
+                    ImageView ivMax = new ImageView(this.context);
+                    ivMax.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            Gravity.CENTER_HORIZONTAL));
+                    ivMax.setBackgroundResource(R.drawable.max);
+                    ivMax.setPadding(3, 10, 3, 10);
+                    ViewGroup.LayoutParams ivParamsMax = ivMax.getLayoutParams();
+                    ivParamsMax.width = 10;
+                    ivParamsMax.height = 10;
+                    linearExtendidoMinMax.addView(ivMax);
+
+                    // texto temperatura max
+                    TextView tvTextoMax = new TextView(this.context);
+                    tvTextoMax.setGravity(Gravity.RIGHT);
+                    tvTextoMax.setLayoutParams(new android.app.ActionBar.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    tvTextoMax.setText(dia_pd.getString("ta")+getString(R.string.main_grados));
+                    tvTextoMax.setTextAppearance(this.context, R.style.ajustesTextoPronosticoExtendido);
+                    linearExtendidoMinMax.addView(tvTextoMax);
+
+
+                    linearExtendido.addView(linearExtendidoMinMax);
+                    layoutPronosticoExtendido.addView(linearExtendido);
+
+                    // division
+                    View division2 = new View(context);
+                    division2.setBackgroundColor(Color.parseColor("#ffafafaf"));
+                    division2.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            2));
+                    layoutPronosticoExtendido.addView(division2);
+
+                }
+
+
+                // GRAFICO TEMPERATURAS MAX/MIN
+                mGraph = (GraphView) viewCiudadPronostico.findViewById(R.id.grafico_temperaturas);
+
+
+                for (int i=0; i < pd.length(); i++) {
+                    JSONObject dia_pd = pd.getJSONObject(i);
+                    //Temperaturas minimas
+                    //dia_pd.getString("ti")
+
+                    //Temperaturas maximas
+                    //dia_pd.getString("ta")
+
+                    //Nombre del dia
+                    /*JSONObject fechaPronosticada = dia_pd.getJSONObject("fechaPronosticada");
+                    SimpleDateFormat format = new SimpleDateFormat("EEEE d");
+                    Date fecha = new Date(Integer.parseInt(fechaPronosticada.getString("year")),
+                            Integer.parseInt(fechaPronosticada.getString("monthValue"))-1,
+                            Integer.parseInt(fechaPronosticada.getString("dayOfMonth")));
+                    format.format(fecha);
+                    */
+
+                }
+
+                // Our datasets
+                float[][] data1 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {0.0f, 10.0f, 8.0f, 12.0f, 12.0f, 0.0f}};
+                float[][] data2 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {0.0f, 8.0f, 4.0f, 11.0f, 10.0f, 0.0f}};
+
+                // The first dataset must be inputted into the graph using setData to replace the placeholder data already there
+                mGraph.setData(new float[][][]{data1}, 0, 5, 0, 15);
+                // We want to add the second data set, but only adjust the max x value as all the other stay the same, so we input NaNs in their place
+                mGraph.addData(data2, Float.NaN, 5, Float.NaN, Float.NaN);
+
+                mGraph.setXLabels(new String[]{"L","M","M","J","V"});
+
+
+
+
 
 
                 HorizontalScrollView parentScroll= (HorizontalScrollView) findViewById(R.id.scroller_horizontal);
@@ -432,14 +770,30 @@ public class MainActivity extends ActionBarActivity
                 childScroll.setId(iconos.getNuevoScrollerIdPorPosicion(posicion));
                 parentScroll.setOnTouchListener(new View.OnTouchListener() {
                     public boolean onTouch(View v, MotionEvent event) {
-                        //findViewById(R.id.scroll_dias_pronostico).getParent().requestDisallowInterceptTouchEvent(false);
                         findViewById(iconos.getNuevoScrollerIdPorPosicion(posicion)).getParent().requestDisallowInterceptTouchEvent(false);
                         return false;
                     }
                 });
                 childScroll.setOnTouchListener(new View.OnTouchListener() {
-                    public boolean onTouch(View v, MotionEvent event)
-                    {
+                    public boolean onTouch(View v, MotionEvent event) {
+                        /*float x1 = 0, x2 = 0, y1 = 0, y2 = 0, dx = 0, dy = 0;
+                        switch(event.getAction()) {
+                            case (MotionEvent.ACTION_DOWN):
+                                x1 = event.getX();
+                                y1 = event.getY();
+                                break;
+                            case (MotionEvent.ACTION_MOVE):
+                                x2 = event.getX();
+                                y2 = event.getY();
+                                dx = x2-x1;
+                                dy = y2-y1;
+
+                                if(Math.abs(dx) > Math.abs(dy)) {
+                                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                                }
+                                break;
+                        }*/
+
                         v.getParent().requestDisallowInterceptTouchEvent(true);
                         return false;
                     }

@@ -8,6 +8,8 @@
     <string name="main_pipe">|</string>
     <string name="main_porcentaje">%</string>
     <string name="main_km_h">km/h</string>
+    <string name="maniana">Mañana</string>
+    <string name="tarde_noche">Tarde/Noche</string>
 
     <string name="main_temperatura">27.5°</string>
     <string name="main_sensacion_termica">ST: 35.5°</string>

@@ -467,12 +467,12 @@ tools:context="com.example.smn.smn.PronosticoDiasActivity"
         android:layout_marginTop="73dp" />-->
 
     <com.example.smn.smn.AreaGraphView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/example_graph"
-        android:layout_below="@+id/scroller_horizontal"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="73dp"/>
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/example_graph"
+    android:layout_below="@+id/scroller_horizontal"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="73dp"/>
 
 </RelativeLayout>
 

@@ -206,6 +206,24 @@
                 </HorizontalScrollView>
 
 
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dip"
+                android:background="#ff2b2b2b"
+                android:id="@+id/pronostico_extendido">
+
+            </LinearLayout>
+
+            <com.example.smn.smn.AreaGraphView
+                android:background="#ff2b2b2b"
+                android:id="@+id/grafico_temperaturas"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="20dip"
+                android:layout_height="200dip"/>
+
+
             </LinearLayout>
     </ScrollView>
 </LinearLayout>
