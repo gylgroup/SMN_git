@@ -63,7 +63,7 @@ public class AreaGraphView extends GraphView {
         mLinePaint.setStyle(Paint.Style.STROKE);
 
         // Ensure you can see the gridlines behind the graph area, but only just
-        mBackgroundPaint.setAlpha(200);
+        mBackgroundPaint.setAlpha(0);
 
         String bitmapColoursString = attributes.getAttributeValue(customSchemaLocation, "graph_shaded_area_colours");
         if (bitmapColoursString == null) bitmapColoursString = "FF007ba1; FF007ba1; FF007ba1; 00007ba1; 00007ba1; 00007ba1";
@@ -87,7 +87,7 @@ public class AreaGraphView extends GraphView {
                 int[] barBitmapColours = {setColour, setColour, setColour, 00000000, 00000000, 00000000};
                 Bitmap barShaderBitmap = Bitmap.createBitmap(barBitmapColours, 0, 1, 1, 6, Bitmap.Config.ARGB_8888);
                 bandShader = new BitmapShader(barShaderBitmap, Shader.TileMode.CLAMP, Shader.TileMode.REPEAT);
-                gradientShader = new LinearGradient(0, 0, 0, graphHeight, 0xCCffffff , 0x11ffffff, Shader.TileMode.CLAMP);
+                gradientShader = new LinearGradient(0, 0, 0, graphHeight, 0x00ffffff , 0x00ffffff, Shader.TileMode.CLAMP);
                 compositeShader = new ComposeShader(bandShader, gradientShader, PorterDuff.Mode.MULTIPLY);
                 mAscendingPaint.setShader(compositeShader);
             } catch (IndexOutOfBoundsException e) {
@@ -125,7 +125,7 @@ public class AreaGraphView extends GraphView {
             mGradientPath.lineTo(startCoordinates[0], mTopPadding + graphHeight);
             mGradientPath.lineTo(startCoordinates[0], startCoordinates[1]);
 
-            gradientShader = new LinearGradient(0, 0, 0, graphHeight, 0xCCffffff , 0x11ffffff, Shader.TileMode.CLAMP);
+            gradientShader = new LinearGradient(0, 0, 0, graphHeight, 0x00ffffff , 0x00ffffff, Shader.TileMode.CLAMP);
             compositeShader = new ComposeShader(bandShader, gradientShader, PorterDuff.Mode.MULTIPLY);
 
             mAscendingPaint.setShader(compositeShader);

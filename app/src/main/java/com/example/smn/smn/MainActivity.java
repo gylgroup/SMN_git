@@ -326,6 +326,9 @@ public class MainActivity extends ActionBarActivity
                 String txtSensacionActual = "--";
                 if(ph.length() > 0) {
                     txtSensacionActual = datos_ph.getString("s");
+                    if(txtSensacionActual == "null"){
+                        txtSensacionActual = "--";
+                    }
                 }
                 TextView tvSensacionActual = (TextView) viewCiudadPronostico.findViewById(R.id.estado_tiempo_sensacion_termica);
                 tvSensacionActual.setText(getString(R.string.main_st) + " " + txtSensacionActual + getString(R.string.main_grados));
@@ -454,8 +457,8 @@ public class MainActivity extends ActionBarActivity
                     ivManianaMin.setBackgroundResource(R.drawable.min);
                     ivManianaMin.setPadding(3, 10, 3, 10);
                     ViewGroup.LayoutParams ivParamsManianaMin = ivManianaMin.getLayoutParams();
-                    ivParamsManianaMin.width = 10;
-                    ivParamsManianaMin.height = 10;
+                    ivParamsManianaMin.width = 20;
+                    ivParamsManianaMin.height = 20;
                     linearDiaManianaMaxMin.addView(ivManianaMin);
 
                     // texto rango temperatura
@@ -471,7 +474,7 @@ public class MainActivity extends ActionBarActivity
                     tvTextoManianaMaxMin.setTextAppearance(this.context, R.style.ajustesTextoMaxMin);
                     linearDiaManianaMaxMin.addView(tvTextoManianaMaxMin);
 
-                    // icono min
+                    // icono max
                     ImageView ivManianaMax = new ImageView(this.context);
                     ivManianaMax.setLayoutParams(new android.app.ActionBar.LayoutParams(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -480,8 +483,8 @@ public class MainActivity extends ActionBarActivity
                     ivManianaMax.setBackgroundResource(R.drawable.max);
                     ivManianaMax.setPadding(3, 10, 3, 10);
                     ViewGroup.LayoutParams ivParamsManianaMax = ivManianaMax.getLayoutParams();
-                    ivParamsManianaMax.width = 10;
-                    ivParamsManianaMax.height = 10;
+                    ivParamsManianaMax.width = 20;
+                    ivParamsManianaMax.height = 20;
                     linearDiaManianaMaxMin.addView(ivManianaMax);
 
                     linearDiaManiana.addView(linearDiaManianaMaxMin);
@@ -542,8 +545,8 @@ public class MainActivity extends ActionBarActivity
                     ivTardeMin.setBackgroundResource(R.drawable.min);
                     ivTardeMin.setPadding(3, 10, 3, 10);
                     ViewGroup.LayoutParams ivParamsTardeMin = ivTardeMin.getLayoutParams();
-                    ivParamsTardeMin.width = 10;
-                    ivParamsTardeMin.height = 10;
+                    ivParamsTardeMin.width = 20;
+                    ivParamsTardeMin.height = 20;
                     linearDiaTardeMaxMin.addView(ivTardeMin);
 
                     // texto rango temperatura
@@ -568,8 +571,8 @@ public class MainActivity extends ActionBarActivity
                     ivTardeMax.setBackgroundResource(R.drawable.max);
                     ivTardeMax.setPadding(3, 10, 3, 10);
                     ViewGroup.LayoutParams ivParamsTardeMax = ivTardeMax.getLayoutParams();
-                    ivParamsTardeMax.width = 10;
-                    ivParamsTardeMax.height = 10;
+                    ivParamsTardeMax.width = 20;
+                    ivParamsTardeMax.height = 20;
                     linearDiaTardeMaxMin.addView(ivTardeMax);
 
                     linearDiaTardeNoche.addView(linearDiaTardeMaxMin);
@@ -671,8 +674,8 @@ public class MainActivity extends ActionBarActivity
                     ivMin.setBackgroundResource(R.drawable.min);
                     ivMin.setPadding(3, 10, 3, 10);
                     ViewGroup.LayoutParams ivParamsMin = ivMin.getLayoutParams();
-                    ivParamsMin.width = 10;
-                    ivParamsMin.height = 10;
+                    ivParamsMin.width = 20;
+                    ivParamsMin.height = 20;
                     linearExtendidoMinMax.addView(ivMin);
 
                     // texto temperatura min
@@ -696,8 +699,8 @@ public class MainActivity extends ActionBarActivity
                     ivMax.setBackgroundResource(R.drawable.max);
                     ivMax.setPadding(3, 10, 3, 10);
                     ViewGroup.LayoutParams ivParamsMax = ivMax.getLayoutParams();
-                    ivParamsMax.width = 10;
-                    ivParamsMax.height = 10;
+                    ivParamsMax.width = 20;
+                    ivParamsMax.height = 20;
                     linearExtendidoMinMax.addView(ivMax);
 
                     // texto temperatura max
@@ -729,36 +732,57 @@ public class MainActivity extends ActionBarActivity
                 // GRAFICO TEMPERATURAS MAX/MIN
                 mGraph = (GraphView) viewCiudadPronostico.findViewById(R.id.grafico_temperaturas);
 
+                float[] minimas = new float[5];
+                float[] maximas = new float[5];
+                float t_mayor = 0;
+                float t_menor = 0;
+                String[] xLabels = new String[4];
 
                 for (int i=0; i < pd.length(); i++) {
                     JSONObject dia_pd = pd.getJSONObject(i);
-                    //Temperaturas minimas
-                    //dia_pd.getString("ti")
 
-                    //Temperaturas maximas
-                    //dia_pd.getString("ta")
+                    minimas[i] = Float.parseFloat(dia_pd.getString("ti"));
+                    maximas[i] = Float.parseFloat(dia_pd.getString("ta"));
+
+                    if(minimas[i] < t_menor){
+                        t_menor = minimas[i];
+                    }
+                    if(maximas[i] > t_mayor){
+                        t_mayor = maximas[i];
+                    }
 
                     //Nombre del dia
-                    /*JSONObject fechaPronosticada = dia_pd.getJSONObject("fechaPronosticada");
-                    SimpleDateFormat format = new SimpleDateFormat("EEEE d");
+                    JSONObject fechaPronosticada = dia_pd.getJSONObject("fechaPronosticada");
+                    SimpleDateFormat format = new SimpleDateFormat("EEEEE");
                     Date fecha = new Date(Integer.parseInt(fechaPronosticada.getString("year")),
                             Integer.parseInt(fechaPronosticada.getString("monthValue"))-1,
                             Integer.parseInt(fechaPronosticada.getString("dayOfMonth")));
-                    format.format(fecha);
-                    */
+                    xLabels[i] = format.format(fecha);
 
                 }
 
                 // Our datasets
-                float[][] data1 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {0.0f, 10.0f, 8.0f, 12.0f, 12.0f, 0.0f}};
-                float[][] data2 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {0.0f, 8.0f, 4.0f, 11.0f, 10.0f, 0.0f}};
+                //float[][] data1 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {0.0f, 10.0f, 8.0f, 12.0f, 12.0f, 0.0f}};
+                //float[][] data2 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f}, {0.0f, 8.0f, 4.0f, 11.0f, 10.0f, 0.0f}};
+                float[][] data1 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f}, maximas};
+                float[][] data2 = {{0.0f, 1.0f, 2.0f, 3.0f, 4.0f}, minimas};
+
+                float yMin = new Float(t_menor-(t_menor*0.1));
+                float yMax = new Float(t_mayor+(t_mayor*0.1));
 
                 // The first dataset must be inputted into the graph using setData to replace the placeholder data already there
-                mGraph.setData(new float[][][]{data1}, 0, 5, 0, 15);
+                mGraph.setData(new float[][][]{data1}, 0, 4, yMin, yMax);
                 // We want to add the second data set, but only adjust the max x value as all the other stay the same, so we input NaNs in their place
-                mGraph.addData(data2, Float.NaN, 5, Float.NaN, Float.NaN);
+                //mGraph.addData(data2, Float.NaN, 5, Float.NaN, Float.NaN);
+                mGraph.addData(data2, Float.NaN, Float.NaN, Float.NaN, Float.NaN);
 
-                mGraph.setXLabels(new String[]{"L","M","M","J","V"});
+                int xDivision = Math.round((yMax-yMin)/4);
+                //mGraph.setXLabels(new String[]{"L","M","M","J","V"});
+                mGraph.setYLabels(new String[]{String.valueOf(yMin + (xDivision * 0)),
+                        String.valueOf(yMin+(xDivision*1)), String.valueOf(yMin+(xDivision*2)),
+                        String.valueOf(yMin+(xDivision*3)), String.valueOf(yMin+(xDivision*4))});
+
+                mGraph.setXLabels(xLabels);
 
 
 
